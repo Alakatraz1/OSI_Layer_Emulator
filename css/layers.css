@@ -1,0 +1,87 @@
+/* ===========================
+   GENERIC LAYER STYLES
+   =========================== */
+
+.layer {
+  border: 1px solid var(--border-soft);
+  border-left-width: 6px;
+  border-radius: 8px;
+  padding: 12px 14px;
+  background-color: var(--bg-layer);
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.layer h2 {
+  font-size: 0.95rem;
+  font-weight: 600;
+}
+
+/* ===========================
+   LAYER CONTENT
+   =========================== */
+
+.layer-content {
+  font-family: monospace;
+  font-size: 0.85rem;
+  background-color: #020617;
+  border: 1px solid var(--border-soft);
+  border-radius: 6px;
+  padding: 8px;
+  min-height: 40px;
+  white-space: pre-wrap;
+  word-break: break-word;
+}
+
+/* ===========================
+   LAYER OPTIONS
+   =========================== */
+
+.layer-options {
+  display: flex;
+  gap: 12px;
+  flex-wrap: wrap;
+  font-size: 0.85rem;
+}
+
+/* ===========================
+   INDIVIDUAL LAYER COLORS
+   =========================== */
+
+.layer.application {
+  border-left-color: var(--accent-green);
+}
+
+.layer.presentation {
+  border-left-color: var(--accent-purple);
+}
+
+.layer.session {
+  border-left-color: #facc15;
+}
+
+.layer.transport {
+  border-left-color: var(--accent-orange);
+}
+
+.layer.network {
+  border-left-color: var(--accent-blue);
+}
+
+.layer.datalink {
+  border-left-color: #14b8a6;
+}
+
+.layer.physical {
+  border-left-color: var(--accent-red);
+}
+
+/* ===========================
+   ACTIVE LAYER (USED LATER)
+   =========================== */
+
+.layer.active {
+  outline: 2px solid var(--accent-blue);
+  background-color: rgba(56, 189, 248, 0.05);
+}

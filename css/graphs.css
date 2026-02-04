@@ -1,0 +1,75 @@
+/* ===========================
+   BINARY / ENCAPSULATION VIEW
+   =========================== */
+
+#binary-view {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  font-family: monospace;
+  font-size: 0.8rem;
+}
+
+.binary-block {
+  padding: 4px 6px;
+  border-radius: 4px;
+  border: 1px solid var(--border-soft);
+}
+
+/* Color coding for encapsulation */
+.binary-application { background-color: rgba(34, 197, 94, 0.15); }
+.binary-transport   { background-color: rgba(249, 115, 22, 0.15); }
+.binary-network     { background-color: rgba(56, 189, 248, 0.15); }
+.binary-datalink    { background-color: rgba(20, 184, 166, 0.15); }
+
+/* ===========================
+   SEGMENTATION / FRAMING VIEW
+   =========================== */
+
+#segmentation-view {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.segment-box,
+.packet-box,
+.frame-box {
+  padding: 6px 10px;
+  border-radius: 6px;
+  border: 1px solid var(--border-soft);
+  font-family: monospace;
+  font-size: 0.75rem;
+}
+
+.segment-box { background-color: rgba(249, 115, 22, 0.15); }
+.packet-box  { background-color: rgba(56, 189, 248, 0.15); }
+.frame-box   { background-color: rgba(20, 184, 166, 0.15); }
+
+/* ===========================
+   SIGNAL GRAPH CANVAS
+   =========================== */
+
+#signal-canvas {
+  width: 100%;
+  border: 1px solid var(--border-soft);
+  border-radius: 6px;
+  background-color: #020617;
+}
+
+/* ===========================
+   ENCODING TIMELINE (FUTURE)
+   =========================== */
+
+.encoding-timeline {
+  display: flex;
+  gap: 2px;
+  align-items: center;
+}
+
+.encoding-bit {
+  width: 20px;
+  height: 20px;
+  border-radius: 2px;
+  border: 1px solid var(--border-soft);
+}

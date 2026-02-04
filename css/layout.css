@@ -1,0 +1,78 @@
+/* ===========================
+   HEADER
+   =========================== */
+
+.app-header {
+  padding: 20px 32px;
+  border-bottom: 1px solid var(--border-soft);
+}
+
+.app-header h1 {
+  margin-bottom: 4px;
+}
+
+.app-header p {
+  font-size: 0.9rem;
+}
+
+/* ===========================
+   INPUT SECTION
+   =========================== */
+
+.input-section {
+  padding: 20px 32px;
+  display: flex;
+  gap: 16px;
+  align-items: flex-start;
+  border-bottom: 1px solid var(--border-soft);
+}
+
+#send-btn {
+  margin-top: 4px;
+}
+
+/* ===========================
+   MAIN CONTAINER
+   =========================== */
+
+.main-container {
+  display: grid;
+  grid-template-columns: 1fr 1fr; /* EQUAL WIDTH COLUMNS */
+  gap: 24px;
+  padding: 24px 32px;
+}
+
+
+/* ===========================
+   OSI STACK
+   =========================== */
+
+.osi-stack {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+/* ===========================
+   VISUALIZATION PANEL
+   =========================== */
+
+.visualization-panel {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+/* ===========================
+   VISUAL BLOCKS
+   =========================== */
+
+.viz-block {
+  border: 1px solid var(--border-soft);
+  border-radius: 8px;
+  padding: 16px;
+}
+
+.viz-block h3 {
+  margin-bottom: 10px;
+}
