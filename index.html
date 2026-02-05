@@ -2,135 +2,117 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>OSI Layer Emulator</title>
 
-  <!-- CSS -->
-  <link rel="stylesheet" href="css/base.css" />
-  <link rel="stylesheet" href="css/layout.css" />
-  <link rel="stylesheet" href="css/layers.css" />
-  <link rel="stylesheet" href="css/animations.css" />
-  <link rel="stylesheet" href="css/graphs.css" />
+  <link rel="stylesheet" href="css/base.css">
+  <link rel="stylesheet" href="css/layout.css">
+  <link rel="stylesheet" href="css/layers.css">
+  <link rel="stylesheet" href="css/animations.css">
+  <link rel="stylesheet" href="css/graphs.css">
 </head>
 
 <body>
 
-  <!-- HEADER -->
-  <header class="app-header">
-    <h1>OSI Layer Emulator</h1>
-    <p>Interactive Encapsulation & Signal Visualization</p>
-  </header>
+<header class="app-header">
+  <h1>OSI Layer Emulator</h1>
+  <p>Interactive Encapsulation & Signal Visualization</p>
+</header>
 
-  <!-- APPLICATION INPUT -->
-  <section class="input-section">
-    <textarea id="app-input" placeholder="Enter application data here..."></textarea>
-    <button id="send-btn">Send</button>
+<section class="input-section">
+  <textarea id="app-input" placeholder="Enter application data..."></textarea>
+  <button id="send-btn">Send</button>
+</section>
+
+<main class="main-container">
+
+  <!-- LEFT: OSI STACK -->
+  <section class="osi-stack">
+
+    <div class="layer application" id="layer-application">
+      <h2>Layer 7 — Application</h2>
+      <div class="layer-content" id="application-output"></div>
+    </div>
+
+    <div class="layer presentation" id="layer-presentation">
+      <h2>Layer 6 — Presentation</h2>
+      <label><input type="checkbox" id="encryption-toggle"> Enable Encryption</label>
+      <div class="layer-content" id="presentation-output"></div>
+    </div>
+
+    <div class="layer session" id="layer-session">
+      <h2>Layer 5 — Session</h2>
+      <div class="layer-content" id="session-output"></div>
+    </div>
+
+    <div class="layer transport" id="layer-transport">
+      <h2>Layer 4 — Transport</h2>
+      <label><input type="radio" name="transport" value="TCP" checked> TCP</label>
+      <label><input type="radio" name="transport" value="UDP"> UDP</label>
+      <div class="layer-content" id="transport-output"></div>
+    </div>
+
+    <div class="layer network" id="layer-network">
+      <h2>Layer 3 — Network</h2>
+      <div class="layer-content" id="network-output"></div>
+    </div>
+
+    <div class="layer datalink" id="layer-datalink">
+      <h2>Layer 2 — Data Link</h2>
+
+      <select id="encoding-select">
+        <option value="NRZ">NRZ</option>
+        <option value="Manchester">Manchester</option>
+        <option value="DiffManchester">Differential Manchester</option>
+      </select>
+
+      <select id="error-select">
+        <option value="Parity">Parity</option>
+        <option value="CRC8">CRC-8</option>
+        <option value="CRC16">CRC-16</option>
+      </select>
+
+      <div class="layer-content" id="datalink-output"></div>
+    </div>
+
+    <div class="layer physical" id="layer-physical">
+      <h2>Layer 1 — Physical</h2>
+
+      <select id="modulation-select">
+        <option value="ASK">ASK</option>
+        <option value="FSK">FSK</option>
+        <option value="PSK">PSK</option>
+      </select>
+    </div>
+
   </section>
 
-  <!-- MAIN CONTENT -->
-  <main class="main-container">
+  <!-- RIGHT: VISUALS -->
+  <section class="visualization-panel">
 
-    <!-- OSI STACK -->
-    <section class="osi-stack">
+    <div class="viz-block">
+      <h3>Encapsulation View</h3>
+      <div id="binary-view"></div>
+    </div>
 
-      <!-- APPLICATION -->
-      <div class="layer application" id="layer-application">
-        <h2>Layer 7 — Application</h2>
-        <div class="layer-content" id="application-output"></div>
-      </div>
+    <div class="viz-block">
+      <h3>Segmentation / Framing</h3>
+      <div id="segmentation-view"></div>
+    </div>
 
-      <!-- PRESENTATION -->
-      <div class="layer presentation" id="layer-presentation">
-        <h2>Layer 6 — Presentation</h2>
-        <div class="layer-options">
-          <label>
-            <input type="checkbox" id="encryption-toggle">
-            Enable Encryption
-          </label>
-        </div>
-        <div class="layer-content" id="presentation-output"></div>
-      </div>
+    <div class="viz-block">
+      <h3>Line Encoding (NRZ / Manchester)</h3>
+      <canvas id="encoding-canvas" width="800" height="180"></canvas>
+    </div>
 
-      <!-- SESSION -->
-      <div class="layer session" id="layer-session">
-        <h2>Layer 5 — Session</h2>
-        <div class="layer-content" id="session-output"></div>
-      </div>
+    <div class="viz-block">
+      <h3>Physical Modulation (ASK / FSK / PSK)</h3>
+      <canvas id="modulation-canvas" width="800" height="180"></canvas>
+    </div>
 
-      <!-- TRANSPORT -->
-      <div class="layer transport" id="layer-transport">
-        <h2>Layer 4 — Transport</h2>
-        <div class="layer-options">
-          <label><input type="radio" name="transport" value="TCP" checked> TCP</label>
-          <label><input type="radio" name="transport" value="UDP"> UDP</label>
-        </div>
-        <div class="layer-content" id="transport-output"></div>
-      </div>
+  </section>
 
-      <!-- NETWORK -->
-      <div class="layer network" id="layer-network">
-        <h2>Layer 3 — Network</h2>
-        <div class="layer-content" id="network-output"></div>
-      </div>
+</main>
 
-      <!-- DATA LINK -->
-      <div class="layer datalink" id="layer-datalink">
-        <h2>Layer 2 — Data Link</h2>
-        <div class="layer-options">
-          <select id="encoding-select">
-            <option value="NRZ">NRZ</option>
-            <option value="Manchester">Manchester</option>
-            <option value="DiffManchester">Differential Manchester</option>
-          </select>
-
-          <select id="error-select">
-            <option value="Parity">Parity</option>
-            <option value="CRC8">CRC-8</option>
-            <option value="CRC16">CRC-16</option>
-          </select>
-        </div>
-        <div class="layer-content" id="datalink-output"></div>
-      </div>
-
-      <!-- PHYSICAL -->
-      <div class="layer physical" id="layer-physical">
-        <h2>Layer 1 — Physical</h2>
-        <div class="layer-options">
-          <select id="modulation-select">
-            <option value="ASK">ASK</option>
-            <option value="FSK">FSK</option>
-            <option value="PSK">PSK</option>
-          </select>
-        </div>
-        <canvas id="signal-canvas" width="800" height="200"></canvas>
-      </div>
-
-    </section>
-
-    <!-- VISUALIZATION PANEL -->
-    <section class="visualization-panel">
-
-      <div class="viz-block">
-        <h3>Encapsulation View</h3>
-        <div id="binary-view"></div>
-      </div>
-
-      <div class="viz-block">
-        <h3>Segmentation / Framing</h3>
-        <div id="segmentation-view"></div>
-      </div>
-
-      <div class="viz-block">
-        <h3>Packet Flow</h3>
-        <div id="packet-flow"></div>
-      </div>
-
-    </section>
-
-  </main>
-
-  <!-- JS -->
-  <script type="module" src="js/app.js"></script>
-
+<script type="module" src="js/app.js"></script>
 </body>
 </html>

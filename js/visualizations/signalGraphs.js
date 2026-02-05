@@ -1,23 +1,18 @@
+const encCanvas = document.getElementById("encoding-canvas");
+const modCanvas = document.getElementById("modulation-canvas");
+
+const encCtx = encCanvas.getContext("2d");
+const modCtx = modCanvas.getContext("2d");
+
 /* ===========================
-   SIGNAL GRAPH VISUALIZATION
+   COMMON HELPERS
    =========================== */
 
-const canvas = document.getElementById("signal-canvas");
-const ctx = canvas.getContext("2d");
-
-/* ===========================
-   CANVAS HELPERS
-   =========================== */
-
-function clearCanvas() {
+function drawAxis(ctx, canvas) {
   ctx.clearRect(0, 0, canvas.width, canvas.height);
-}
-
-function drawAxis() {
   ctx.strokeStyle = "#334155";
   ctx.lineWidth = 1;
 
-  // Horizontal center line
   ctx.beginPath();
   ctx.moveTo(0, canvas.height / 2);
   ctx.lineTo(canvas.width, canvas.height / 2);
@@ -25,95 +20,77 @@ function drawAxis() {
 }
 
 /* ===========================
-   DRAW FUNCTIONS
+   DIGITAL LINE ENCODING
    =========================== */
 
-function drawASK(bits) {
-  const bitWidth = canvas.width / bits.length;
-  const centerY = canvas.height / 2;
+export function drawLineEncoding(levels) {
+  drawAxis(encCtx, encCanvas);
 
-  ctx.beginPath();
-  ctx.strokeStyle = "#38bdf8";
-  ctx.lineWidth = 2;
+  const bitWidth = encCanvas.width / levels.length;
+  const mid = encCanvas.height / 2;
+  const amplitude = 40;
 
-  bits.forEach((bit, i) => {
-    const amplitude = bit === 1 ? 60 : 15;
-    const x = i * bitWidth;
-    const y = centerY - amplitude;
+  encCtx.strokeStyle = "#38bdf8";
+  encCtx.lineWidth = 2;
 
-    ctx.lineTo(x, y);
-    ctx.lineTo(x + bitWidth, y);
-  });
+  let prevY = mid - levels[0] * amplitude;
+  let x = 0;
 
-  ctx.stroke();
-}
+  encCtx.beginPath();
+  encCtx.moveTo(x, prevY);
 
-function drawFSK(bits) {
-  const bitWidth = canvas.width / bits.length;
-  const centerY = canvas.height / 2;
+  levels.forEach((level, i) => {
+    const y = mid - level * amplitude;
 
-  ctx.strokeStyle = "#22c55e";
-  ctx.lineWidth = 2;
+    // horizontal line (bit duration)
+    encCtx.lineTo(x + bitWidth, y);
 
-  bits.forEach((bit, i) => {
-    const freq = bit === 1 ? 8 : 3;
-    const startX = i * bitWidth;
-
-    ctx.beginPath();
-    for (let x = 0; x < bitWidth; x++) {
-      const y =
-        centerY +
-        Math.sin((x / bitWidth) * freq * 2 * Math.PI) * 40;
-      ctx.lineTo(startX + x, y);
+    // vertical transition (if next bit changes)
+    if (i < levels.length - 1) {
+      const nextY = mid - levels[i + 1] * amplitude;
+      encCtx.lineTo(x + bitWidth, nextY);
     }
-    ctx.stroke();
+
+    x += bitWidth;
   });
-}
 
-function drawPSK(bits) {
-  const bitWidth = canvas.width / bits.length;
-  const centerY = canvas.height / 2;
-
-  ctx.strokeStyle = "#f97316";
-  ctx.lineWidth = 2;
-
-  bits.forEach((bit, i) => {
-    const phase = bit === 1 ? Math.PI : 0;
-    const startX = i * bitWidth;
-
-    ctx.beginPath();
-    for (let x = 0; x < bitWidth; x++) {
-      const y =
-        centerY +
-        Math.sin((x / bitWidth) * 2 * Math.PI + phase) * 40;
-      ctx.lineTo(startX + x, y);
-    }
-    ctx.stroke();
-  });
+  encCtx.stroke();
 }
 
 /* ===========================
-   PUBLIC API
+   PHYSICAL MODULATION (ANALOG)
    =========================== */
 
-export function drawSignal(bits, signal, modulation) {
-  if (!canvas) return;
+export function drawModulation(bits, type) {
+  drawAxis(modCtx, modCanvas);
 
-  clearCanvas();
-  drawAxis();
+  const step = modCanvas.width / bits.length;
+  const mid = modCanvas.height / 2;
 
-  // Limit bits drawn for clarity
-  const displayBits = bits.slice(0, 40);
+  modCtx.strokeStyle = "#22c55e";
+  modCtx.lineWidth = 2;
 
-  if (modulation === "ASK") {
-    drawASK(displayBits);
-  }
+  bits.forEach((bit, i) => {
+    modCtx.beginPath();
+    for (let x = 0; x < step; x++) {
+      let y = mid;
 
-  if (modulation === "FSK") {
-    drawFSK(displayBits);
-  }
+      if (type === "ASK") {
+        y += Math.sin((x / step) * 2 * Math.PI) * (bit ? 40 : 10);
+      }
 
-  if (modulation === "PSK") {
-    drawPSK(displayBits);
-  }
+      if (type === "FSK") {
+        const freq = bit ? 6 : 2;
+        y += Math.sin((x / step) * freq * 2 * Math.PI) * 40;
+      }
+
+      if (type === "PSK") {
+        const phase = bit ? Math.PI : 0;
+        y += Math.sin((x / step) * 2 * Math.PI + phase) * 40;
+      }
+
+      modCtx.lineTo(i * step + x, y);
+    }
+    modCtx.stroke();
+  });
 }
