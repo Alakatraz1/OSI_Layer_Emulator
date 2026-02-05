@@ -1,31 +1,34 @@
-/* ===========================
-   SEGMENT / PACKET / FRAME VIEW
-   =========================== */
-
 const container = document.getElementById("segmentation-view");
 
-/* Clear view */
+/* ===========================
+   CLEAR VIEW
+   =========================== */
 export function clearSegmentationView() {
-  if (!container) return;
   container.innerHTML = "";
 }
 
-/*
-  type = "segment" | "packet" | "frame"
-*/
+/* ===========================
+   UPDATE VIEW
+   =========================== */
 export function updateSegmentationView(items, type) {
-  if (!container) return;
-
   container.innerHTML = "";
 
   items.forEach((item, index) => {
-    const div = document.createElement("div");
+    const btn = document.createElement("button");
+    btn.className = "segment-item";
+    btn.textContent = `${type.toUpperCase()} ${index}: ${item}`;
 
-    if (type === "segment") div.className = "segment-box";
-    if (type === "packet")  div.className = "packet-box";
-    if (type === "frame")   div.className = "frame-box";
+    btn.addEventListener("click", () => {
+      window.dispatchEvent(
+        new CustomEvent("frame-selected", {
+          detail: {
+            payload: item,
+            index
+          }
+        })
+      );
+    });
 
-    div.textContent = `${type.toUpperCase()} ${index}: ${item}`;
-    container.appendChild(div);
+    container.appendChild(btn);
   });
 }

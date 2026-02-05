@@ -1,11 +1,14 @@
 const encCanvas = document.getElementById("encoding-canvas");
 const modCanvas = document.getElementById("modulation-canvas");
 
+const encText = document.getElementById("encoding-data");
+const modText = document.getElementById("modulation-data");
+
 const encCtx = encCanvas.getContext("2d");
 const modCtx = modCanvas.getContext("2d");
 
 /* ===========================
-   COMMON HELPERS
+   HELPERS
    =========================== */
 
 function drawAxis(ctx, canvas) {
@@ -19,35 +22,50 @@ function drawAxis(ctx, canvas) {
   ctx.stroke();
 }
 
-/* ===========================
-   DIGITAL LINE ENCODING
-   =========================== */
+function bitsToText(bits) {
+  let text = "";
+  for (let i = 0; i < bits.length; i += 8) {
+    const byte = bits.slice(i, i + 8).join("");
+    if (byte.length === 8) {
+      text += String.fromCharCode(parseInt(byte, 2));
+    }
+  }
+  return text;
+}
 
-export function drawLineEncoding(levels) {
+/* ===========================
+   LINE ENCODING (DIGITAL)
+   =========================== */
+export function drawLineEncoding(levels, bits) {
   drawAxis(encCtx, encCanvas);
+
+  const previewBits = bits.slice(0, 32);
+  const text = bitsToText(previewBits);
+
+  encText.textContent =
+    `Original Text: "${text}"\n` +
+    `Binary Bits: ${previewBits.join(" ")}\n` +
+    `Signal Levels: ${levels.slice(0, 16).join(", ")}${levels.length > 16 ? " ..." : ""}`;
 
   const bitWidth = encCanvas.width / levels.length;
   const mid = encCanvas.height / 2;
-  const amplitude = 40;
+  const amp = 40;
 
   encCtx.strokeStyle = "#38bdf8";
   encCtx.lineWidth = 2;
 
-  let prevY = mid - levels[0] * amplitude;
   let x = 0;
+  let y = mid - levels[0] * amp;
 
   encCtx.beginPath();
-  encCtx.moveTo(x, prevY);
+  encCtx.moveTo(x, y);
 
-  levels.forEach((level, i) => {
-    const y = mid - level * amplitude;
+  levels.forEach((lvl, i) => {
+    const currY = mid - lvl * amp;
+    encCtx.lineTo(x + bitWidth, currY);
 
-    // horizontal line (bit duration)
-    encCtx.lineTo(x + bitWidth, y);
-
-    // vertical transition (if next bit changes)
     if (i < levels.length - 1) {
-      const nextY = mid - levels[i + 1] * amplitude;
+      const nextY = mid - levels[i + 1] * amp;
       encCtx.lineTo(x + bitWidth, nextY);
     }
 
@@ -58,11 +76,18 @@ export function drawLineEncoding(levels) {
 }
 
 /* ===========================
-   PHYSICAL MODULATION (ANALOG)
+   MODULATION (ANALOG)
    =========================== */
-
 export function drawModulation(bits, type) {
   drawAxis(modCtx, modCanvas);
+
+  const previewBits = bits.slice(0, 32);
+  const text = bitsToText(previewBits);
+
+  modText.textContent =
+    `Original Text: "${text}"\n` +
+    `Binary Bits: ${previewBits.join(" ")}\n` +
+    `Modulation Type: ${type}`;
 
   const step = modCanvas.width / bits.length;
   const mid = modCanvas.height / 2;
@@ -80,8 +105,8 @@ export function drawModulation(bits, type) {
       }
 
       if (type === "FSK") {
-        const freq = bit ? 6 : 2;
-        y += Math.sin((x / step) * freq * 2 * Math.PI) * 40;
+        const f = bit ? 6 : 2;
+        y += Math.sin((x / step) * f * 2 * Math.PI) * 40;
       }
 
       if (type === "PSK") {

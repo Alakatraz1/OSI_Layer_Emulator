@@ -25,7 +25,7 @@
 
 <main class="main-container">
 
-  <!-- LEFT: OSI STACK -->
+  <!-- LEFT -->
   <section class="osi-stack">
 
     <div class="layer application" id="layer-application">
@@ -86,7 +86,7 @@
 
   </section>
 
-  <!-- RIGHT: VISUALS -->
+  <!-- RIGHT -->
   <section class="visualization-panel">
 
     <div class="viz-block">
@@ -101,11 +101,13 @@
 
     <div class="viz-block">
       <h3>Line Encoding (NRZ / Manchester)</h3>
+      <p id="encoding-data" class="graph-data"></p>
       <canvas id="encoding-canvas" width="800" height="180"></canvas>
     </div>
 
     <div class="viz-block">
       <h3>Physical Modulation (ASK / FSK / PSK)</h3>
+      <p id="modulation-data" class="graph-data"></p>
       <canvas id="modulation-canvas" width="800" height="180"></canvas>
     </div>
 
