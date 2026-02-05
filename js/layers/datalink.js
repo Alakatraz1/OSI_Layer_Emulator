@@ -33,6 +33,10 @@ export async function runDataLink() {
 
   const src = mac();
   const dst = mac();
+  packetState.datalink.header = {
+  srcMAC: src,
+  dstMAC: dst
+};
 
   const frames = packetState.network.packets.map(p => ({
     payload: p.payload,
